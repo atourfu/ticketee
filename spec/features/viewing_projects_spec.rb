@@ -11,9 +11,11 @@ feature "Viewing projects" do
 
 	scenario "Listing all projects" do
 		#project = FactoryGirl.create(:project, name: "TextMate 2")
+		FactoryGirl.create(:project, name: "Hidden")
 		visit '/'
+		expect(page).to_not have_content("Hidden")
 		click_link project.name
 
-		expect(page.current_url).to eql(project_url(project))
+		#expect(page.current_url).to eql(project_url(project))
 	end
 end
