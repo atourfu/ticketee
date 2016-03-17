@@ -44,7 +44,11 @@ class TicketsController < ApplicationController
 	  flash[:notice] = "Ticket has been deleted."
 	  
 	  redirect_to @project
-	end	
+	end
+
+	def show
+		@comment = @ticket.comments.build
+	end
 
 	private
 
