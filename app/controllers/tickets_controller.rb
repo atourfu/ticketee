@@ -12,38 +12,42 @@ class TicketsController < ApplicationController
 	end
 
 	def create
-	  @ticket = @project.tickets.build(ticket_params)
-	  @ticket.user = current_user
+		if cannot?(:tag, @project)
+			params[:ticket].delete(:tag_names)
+		end
+		
+		@ticket = @project.tickets.build(ticket_params)
+		@ticket.user = current_user
 
-	  if @ticket.save
-	    flash[:notice] = "Ticket has been created."
-	    redirect_to [@project, @ticket]
-	  else
-	    flash[:alert] = "Ticket has not been created."
-	    render "new"
-	  end
+		if @ticket.save
+			flash[:notice] = "Ticket has been created."
+			redirect_to [@project, @ticket]
+		else
+			flash[:alert] = "Ticket has not been created."
+			render "new"
+		end
 	end
 
 	def edit
 	end
 
 	def update
-	  if @ticket.update(ticket_params)
-	    flash[:notice] = "Ticket has been updated."
-	    
-	    redirect_to [@project, @ticket]
-	  else
-	    flash[:alert] = "Ticket has not been updated."
-	    
-	    render action: "edit"
-	  end
+		if @ticket.update(ticket_params)
+			flash[:notice] = "Ticket has been updated."
+
+			redirect_to [@project, @ticket]
+		else
+			flash[:alert] = "Ticket has not been updated."
+
+			render action: "edit"
+		end
 	end
 
 	def destroy
-	  @ticket.destroy
-	  flash[:notice] = "Ticket has been deleted."
-	  
-	  redirect_to @project
+		@ticket.destroy
+		flash[:notice] = "Ticket has been deleted."
+
+		redirect_to @project
 	end
 
 	def show
@@ -76,16 +80,16 @@ class TicketsController < ApplicationController
 	end
 
 	def authorize_update!
-	  if !current_user.admin? && cannot?("edit tickets".to_sym, @project)
-	    flash[:alert] = "You cannot edit tickets on this project."
-	    redirect_to @project
-	  end
+		if !current_user.admin? && cannot?("edit tickets".to_sym, @project)
+			flash[:alert] = "You cannot edit tickets on this project."
+			redirect_to @project
+		end
 	end
 
 	def authorize_delete!
-	  if !current_user.admin? && cannot?(:"delete tickets", @project)
-	    flash[:alert] = "You cannot delete tickets from this project."
-	    redirect_to @project
-	  end
+		if !current_user.admin? && cannot?(:"delete tickets", @project)
+			flash[:alert] = "You cannot delete tickets from this project."
+			redirect_to @project
+		end
 	end
 end
