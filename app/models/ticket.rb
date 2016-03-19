@@ -10,6 +10,7 @@ class Ticket < ActiveRecord::Base
   has_and_belongs_to_many :tags
   searcher do
     label :tag, :from => :tags, :field => :name
+    label :state, :from => :state, :field => :name
   end
   
   accepts_nested_attributes_for :assets
