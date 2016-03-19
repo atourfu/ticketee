@@ -30,6 +30,8 @@ gem 'carrierwave', '0.8.0'
 gem 'selenium-webdriver'
 gem 'database_cleaner', '1.0.1'
 
+gem 'searcher', :git => "git://github.com/radar/searcher"
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
