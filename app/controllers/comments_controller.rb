@@ -3,7 +3,6 @@ class CommentsController < ApplicationController
 	before_filter :find_ticket
 
 	def create
-		#debugger
 		if cannot?(:"change states", @ticket.project)
 			params[:comment].delete(:state_id)
 		end
@@ -27,6 +26,6 @@ class CommentsController < ApplicationController
 	end
 
 	def comment_params
-      params.require(:comment).permit(:text, :state_id)
+      params.require(:comment).permit(:text, :state_id, :tag_names)
     end
 end

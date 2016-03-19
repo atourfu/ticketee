@@ -50,10 +50,24 @@ feature "Creating comments" do
 	end
 
 	scenario "A user without permission cannot change the state" do
-	  click_link ticket.title
-    message = 'Unable to find css "#comment_state_id"'
-    expect {
-      find("#comment_state_id")
-    }.to raise_error(Capybara::ElementNotFound, message)
+		click_link ticket.title
+		message = 'Unable to find css "#comment_state_id"'
+		expect { find("#comment_state_id") }.to raise_error(Capybara::ElementNotFound, message)
+	end
+
+	scenario "Adding a tag to a ticket" do
+		click_link ticket.title
+		within("#ticket #tags") do
+			page.should_not have_content("bug")
+		end
+
+		fill_in "Text", :with => "Adding the bug tag"
+		fill_in "Tags", :with => "bug"
+		click_button "Create Comment"
+		
+		page.should have_content("Comment has been created.")
+		within("#ticket #tags") do
+			page.should have_content("bug")
+		end
 	end
 end
